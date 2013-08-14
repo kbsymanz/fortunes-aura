@@ -3,6 +3,8 @@
   "version": "0.1.0",
   "dependencies": {
     "jquery": "~1.10.x",
-    "aura" : "latest"
+    "aura" : "latest",
+    "bootstrap": "3.0.x",
+    "require-handlebars-plugin": "latest"
   }
 }

@@ -4,3 +4,13 @@
   padding: 0 10px;
 }
 
+#random-list {
+  margin: 0 0 10px 0;
+  padding: 5px 10px;
+  min-height: 300px;
+}
+
+#random-list li {
+  list-style-type: none;
+  padding-bottom: 10px;
+}

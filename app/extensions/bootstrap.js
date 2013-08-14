@@ -6,9 +6,10 @@ define({
     },
     shim: {
       bootstrap: {
-        exports: 'Bootstrap',
+        exports: '$.fn.popover',
         deps: ['jquery']
-      }
+      },
+      enforceDefine: true
     }
   },
 

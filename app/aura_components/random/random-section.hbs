@@ -1,0 +1,21 @@
+<div class="random-section span4">
+  <h3>Random Fortunes
+  <a id="random-about-toggle" class="label pull-right muted">about</a></h3>
+  <div id="random-about" class="modal hide fade about">
+    <h3 class="modal-header">Random and Server Pushes</h3>
+    <div class="modal-body">
+      <p>Upon load, the client requests one immediate random fortune from the server which it uses to initially populate the DOM. The client also instructs the server to send random fortunes at specified intervals. These server communications are specific to each client.</p>
+
+      <p>When the server pushes a new fortune, the fortune is added to the DOM as a list element. In the process, the oldest list element is removed if the number of list elements exceeds the maximum allowed.</p>
+
+      <p>This component was purposely implemented without using Backbone.</p>
+    </div>
+    <div id="random-about-footer-close" class="modal-footer">
+      <button class="btn">Close</button>
+    </div>
+  </div>
+  <div class="random-list-div">
+    <ul id="random-list"></ul>
+  </div>
+</div>
+

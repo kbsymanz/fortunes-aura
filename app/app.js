@@ -4,8 +4,9 @@ require([
   Aura({
     debug: {enable: true}
   })
-    .use('extensions/aura-awesome-extension')
     .use('extensions/bootstrap')
+    .use('extensions/aura-handlebars')
+    .use('extensions/sockets')
     .start({ components: 'body' }).then(function() {
       console.warn('Aura started...');
     });
