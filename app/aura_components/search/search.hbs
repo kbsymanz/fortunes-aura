@@ -1,0 +1,25 @@
+<div class="search-section span4">
+  <h3>Search Fortunes
+  <a id="search-about-toggle" class="label pull-right muted" data-toggle="modal" data-target="#search-about">about</a></h3>
+  <div id="search-about" class="modal hide fade about">
+    <h3 class="modal-header">Search for Fortunes</h3>
+    <div class="modal-body">
+      <p>Search the server for fortunes containing the matching keywords that are specified.</p>
+      <p>The initial DOM rendering is done by the search component, which also handles the call to the socket extension for getting the results from the server.</p>
+      <p>When the results are returned, the search component dynamically starts the search_result component which updates the DOM with the results of the search.</p>
+    </div>
+    <div id="search-about-footer-close" class="modal-footer">
+      <button class="btn">Close</button>
+    </div>
+  </div>
+  <div class="search-list">
+    <form class="well well-small">
+      <input id="search_field" name="search" placeholder="Search for words in fortunes">
+    </form>
+    <div id="search_progress" class="hidden progress progress-striped active">
+      <div class="bar" style="width: 100%">Searching ...</div>
+    </div>
+    <div id="search_result"></div>
+  </div>
+</div>
+

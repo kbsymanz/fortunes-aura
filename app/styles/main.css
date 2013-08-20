@@ -4,6 +4,14 @@
   padding: 0 10px;
 }
 
+/* This is from bootstrap-responsive.css but this is the
+ * only thing used from it so we don't need to include
+ * all of it. */
+.hidden {
+  display: none;
+  visibility: hidden;
+}
+
 #random-list {
   margin: 0 0 10px 0;
   padding: 5px 10px;

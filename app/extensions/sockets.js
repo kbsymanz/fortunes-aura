@@ -129,7 +129,6 @@ define([
 
   sockets.initialize = function (app) {
     var self = this
-      , isConnected = false
       , ready = app.core.data.deferred()
       ;
 
@@ -144,10 +143,10 @@ define([
       app.logger.log('Connect');
       sockets.whoami(function(err, username) {
 
-        //if (! isSubSearch) {
-          //app.sandbox.on('search', search);
-          //isSubSearch = true;
-        //}
+        if (! isSubSearch) {
+          app.sandbox.on('search', search);
+          isSubSearch = true;
+        }
 
         if (! isSubRandom) {
           app.sandbox.on('random', random);
@@ -167,6 +166,7 @@ define([
     });
 
     server.on('disconnect', function() {
+      isConnected = false;
       app.logger.log('Disconnect');
       app.sandbox.emit('offline');
     });
@@ -177,6 +177,18 @@ define([
     // Force application to wait until sockets are up.
     // --------------------------------------------------------
     return ready.promise();
+  };
+
+  /* --------------------------------------------------------
+   * isOnline()
+   *
+   * Is the socket connected to the server now?
+   *
+   * param       undefined
+   * return      boolean
+   * -------------------------------------------------------- */
+  var isOnline = sockets.isOnline = function() {
+    return isConnected;
   };
 
   return sockets;
