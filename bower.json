@@ -5,6 +5,7 @@
     "jquery": "~1.10.x",
     "aura" : "latest",
     "bootstrap": "3.0.x",
-    "require-handlebars-plugin": "latest"
+    "require-handlebars-plugin": "latest",
+    "backbone": "1.0.x"
   }
 }

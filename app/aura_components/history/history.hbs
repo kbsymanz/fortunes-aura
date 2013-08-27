@@ -1,0 +1,15 @@
+<div class="history-section span4">
+  <h3>Fortunes Searches
+  <a id="history-about-toggle" class="label pull-right muted" data-toggle="modal" data-target="#history-about">about</a></h3>
+  <div id="history-about" class="modal hide fade about">
+    <h3>Search Results Stored in LocalStorage</h3>
+    <p>The results of the explicit searches that the user performs are stored in LocalStorage and are available for immediate retrieval with no additional communication with the server.</p>
+    <p>When selected, the search term and the search results are displayed again in the Search Fortunes section just as though the search had just been performed.</p>
+  </div>
+  <div class="history-list">
+    <p>Recent searches, sorted descending</p>
+    <p>Total: {{length}}</p>
+    <ul id="history-detail"></ul>
+  </div>
+</div>
+

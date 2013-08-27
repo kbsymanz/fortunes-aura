@@ -22,3 +22,12 @@
   list-style-type: none;
   padding-bottom: 10px;
 }
+
+.no-searches {
+  list-style-type: none;
+  color: #999999;
+  font-style: bold;
+  padding: 5px 3px;
+  position: relative;
+  left: -2em;
+}

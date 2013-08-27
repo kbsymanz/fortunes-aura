@@ -85,6 +85,7 @@ define([
         if (err) return sandbox.logger.error(err);
         data.result = result;
         data.term = options.term;
+        data.searchTime = Date.now();
         cb(data);
       });
     }, serverDelay);
@@ -113,7 +114,6 @@ define([
     var compiler = this.sandbox.template.hbs
       , fOpts = {}
       , search = {}
-      , self = this
       ;
 
     logger = this.sandbox.logger;
@@ -179,18 +179,24 @@ define([
   /* --------------------------------------------------------
    * handleResult()
    *
-   * Adjust the UI for the user since the search is done and
-   * render the search results.
+   * Adjust the UI for the user since the search is done, store
+   * the search and results in history, and render the search results.
    *
    * param       result
    * return      undefined
    * -------------------------------------------------------- */
-  search.handleResult = function(result) {
+  search.handleResult = function(search) {
     var $el = $(progressBarSel)
       ;
 
     $el.addClass('hidden');
-    this.renderDetail(result);
+
+    // --------------------------------------------------------
+    // Add the search to the history.
+    // --------------------------------------------------------
+    this.sandbox.emit('search_history:add', search);
+
+    this.renderDetail(search);
   };
 
   /* --------------------------------------------------------
