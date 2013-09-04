@@ -4,6 +4,7 @@
  *
  * Expose Backbone as an extension. Adapted from:
  * https://github.com/aurajs/aura/issues/271#issuecomment-20240585
+ * https://github.com/tony/aura/blob/master/src/extensions/backbone/sandbox.js
  * -------------------------------------------------------------------------------
  */
 define(function () {
@@ -28,17 +29,7 @@ define(function () {
     },
 
     initialize: function (app) {
-      app.core.backbone = require('backbone');
       app.logger.log('Initializing extension: backbone');
     },
-
-    afterAppStart: function(app) {
-      if (! historyStarted) {
-        app.core.backbone.history.start();
-        historyStarted = true;
-      }
-      app.logger.log('backbone#afterAppStart()');
-    }
-
   };
 });

@@ -1,10 +1,13 @@
 define([
   'underscore',
   'jquery',
+  'extensions/utils',
   'text!./search.hbs'
-], function (_, $, tplSectionSrc) {
+], function (_, $, Utils, tplSectionSrc) {
   var search = {}
     , serverDelay = 0  // milliseconds to delay to emulate remote server, 0 to disable
+      // Use the same sandbox for emits to work correctly, so we store reference.
+    , sbRef = Utils.getSandbox().ref
     ;
 
   'use strict';
@@ -14,11 +17,6 @@ define([
   // --------------------------------------------------------
   searchFieldSel = 'input#search_field';
   progressBarSel = '#search_progress';
-
-  // --------------------------------------------------------
-  // The Aura Logger which is assigned in initialize().
-  // --------------------------------------------------------
-  var logger;
 
   /* --------------------------------------------------------
    * handleSearch()
@@ -32,7 +30,7 @@ define([
    * return      undefined
    * -------------------------------------------------------- */
   var handleSearch = function(evt) {
-    var sandbox = evt.data.sandbox
+    var sandbox = Utils.getSandbox(sbRef)
       , term
       , cb = evt.data.cb
       , $el = $(evt.data.el)
@@ -71,6 +69,7 @@ define([
    * return      undefined
    * -------------------------------------------------------- */
   var doSearch = function(sandbox, options, cb) {
+
     // --------------------------------------------------------
     // setTimeout() is for testing only to allow the UI to update
     // when searching against localhost, i.e. portrays a server
@@ -92,31 +91,17 @@ define([
   };
 
   /* --------------------------------------------------------
-   * lf2br()
-   *
-   * Change the line feeds into breaks.
-   *
-   * param       result
-   * return      new array
-   * -------------------------------------------------------- */
-  var lf2br = function(result) {
-    return _.map(result, function(rst) {
-      return rst.split('\n').join('<br />');
-    });
-  };
-
-  /* --------------------------------------------------------
    * initialize()
    *
    * Sets up the component.
    * -------------------------------------------------------- */
   search.initialize = function () {
-    var compiler = this.sandbox.template.hbs
-      , fOpts = {}
+    var fOpts = {}
       , search = {}
+      , self = this
+      , sandbox = Utils.getSandbox(sbRef)
+      , compiler = sandbox.template.hbs
       ;
-
-    logger = this.sandbox.logger;
 
     _.bindAll(this, 'renderSection', 'handleResult', 'renderDetail');
 
@@ -133,11 +118,19 @@ define([
     this.renderSection();
 
     // --------------------------------------------------------
+    // Respond to a routing event that is produced by the
+    // router component.
+    // --------------------------------------------------------
+    sandbox.on('route.home', function() {
+      self.renderSection();
+    }, this);
+
+    // --------------------------------------------------------
     // Events and bindings - the <enter> key starts search.
     // --------------------------------------------------------
     this.$el.on('keypress',
         searchFieldSel,
-        {sandbox: this.sandbox, cb: this.handleResult, el: progressBarSel},
+        {cb: self.handleResult, el: progressBarSel},
         handleSearch);
   };
 
@@ -187,6 +180,7 @@ define([
    * -------------------------------------------------------- */
   search.handleResult = function(search) {
     var $el = $(progressBarSel)
+      , sandbox = Utils.getSandbox(sbRef)
       ;
 
     $el.addClass('hidden');
@@ -194,7 +188,7 @@ define([
     // --------------------------------------------------------
     // Add the search to the history.
     // --------------------------------------------------------
-    this.sandbox.emit('search_history:add', search);
+    sandbox.emit('search_history:add', search);
 
     this.renderDetail(search);
   };
@@ -210,11 +204,13 @@ define([
    * return      undefined
    * -------------------------------------------------------- */
   search.renderDetail = function(result) {
+    var sandbox = Utils.getSandbox(sbRef)
+      ;
 
     // --------------------------------------------------------
     // Convert newlines into breaks.
     // --------------------------------------------------------
-    result.result = lf2br(result.result);
+    result.result = Utils.lf2br(result.result);
 
     // --------------------------------------------------------
     // Dynamically starting another component. The search_result
@@ -225,7 +221,7 @@ define([
     // until I renamed the component from searchResult to
     // search_result.
     // --------------------------------------------------------
-    this.sandbox.start([{
+    sandbox.start([{
       name: 'search_result'
       , options: {
         el: '#search_result'

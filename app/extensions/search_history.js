@@ -15,6 +15,7 @@ define([
     , searchTime: Date.now()
     , result: []
     , isSearching: false
+    , idAttribute: 'searchTime'
   });
 
   // --------------------------------------------------------
@@ -137,6 +138,19 @@ define([
    * -------------------------------------------------------- */
   search_history.getList = function() {
     return searchHistory.toJSON();
+  };
+
+  /* --------------------------------------------------------
+   * get()
+   *
+   * Return a search in JSON format to the caller as specified
+   * by the id.
+   *
+   * param       id
+   * return      object
+   * -------------------------------------------------------- */
+  search_history.get = function(id) {
+    return searchHistory.get(id).toJSON();
   };
 
   return search_history;

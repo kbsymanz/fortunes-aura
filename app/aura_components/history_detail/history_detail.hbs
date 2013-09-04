@@ -1,0 +1,20 @@
+<div class="history-detail-section span4">
+  <h3>Fortune Detail
+  <a id="hisdet-about-toggle" class="label pull-right muted" data-toggle="modal" data-target="#hisdet-about">about</a></h3>
+  <div id="hisdet-about" class="modal hide fade about">
+    <h3>Retrieve Past Search Results</h3>
+    <p>Displays past searches retrieved from localStorage. The server is not contacted again to obtain these results.</p>
+  </div>
+  <a id="new-search" href="#">New Search</a>
+  <div class="hisdet-list">
+    <div id="search_results">
+      <p>Results for: <strong>{{term}}</strong></p>
+      <div>
+      {{#each result}}
+        <p class="result">{{{this}}}</p>
+      {{/each}}
+      </div>
+    </div>
+  </div>
+</div>
+
