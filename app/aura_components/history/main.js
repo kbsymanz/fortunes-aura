@@ -2,9 +2,10 @@ define([
   'underscore',
   'jquery',
   'extensions/search_history',
+  'extensions/sockets',
   'text!./history.hbs',
   'text!./history-detail.hbs'
-], function (_, $, SearchHistory, tplHistorySrc, tplHistoryDetailSrc) {
+], function (_, $, SearchHistory, Sockets, tplHistorySrc, tplHistoryDetailSrc) {
   var history = {}
     ;
 
@@ -23,9 +24,10 @@ define([
    * -------------------------------------------------------- */
   history.initialize = function () {
     var compiler = this.sandbox.template.hbs
+      , self = this
       ;
 
-    _.bindAll(this, 'render', 'renderOne', 'unrenderOne');
+    _.bindAll(this, 'renderSection', 'renderOne', 'unrenderOne');
 
     // --------------------------------------------------------
     // We compile our templates in the browser here but we should
@@ -35,22 +37,58 @@ define([
     this.tplHistory = compiler.compile(tplHistorySrc);
     this.tplHistoryDetail = compiler.compile(tplHistoryDetailSrc);
 
-    this.sandbox.on('search_history:added', this.renderOne, this);
-    this.sandbox.on('search_history:removed', this.unrenderOne, this);
+    this.renderSection();
 
-    this.render();
+    // --------------------------------------------------------
+    // Store for renderOne() to use.
+    // --------------------------------------------------------
+    this.$oneEl = $('#history-detail');
+
+    // --------------------------------------------------------
+    // Load the historical searches for this user.
+    // First get the username from the server.
+    // --------------------------------------------------------
+    Sockets.whoami(function(err, username) {
+      if (err) {
+        console.error(err);
+        return false;
+      }
+
+      // --------------------------------------------------------
+      // Now let the search history collection know the username
+      // and allow it to check localStorage for historical searches.
+      // --------------------------------------------------------
+      SearchHistory.registerUser(username, function(err) {
+        if (err) {
+          return console.log('SearchHistory.registerUser() returned error');
+        }
+
+        // --------------------------------------------------------
+        // Render the item details.
+        // --------------------------------------------------------
+        _.each(SearchHistory.getList(), function(search) {
+          self.renderOne(search);
+        });
+
+        // --------------------------------------------------------
+        // Now that the historical searches are added to the collection,
+        // we can start listening for other searches that the user does.
+        // --------------------------------------------------------
+        self.sandbox.on('search_history:added', self.renderOne, self);
+        self.sandbox.on('search_history:removed', self.unrenderOne, self);
+      });
+    });
   };
 
   /* --------------------------------------------------------
-   * render()
+   * renderSection()
    *
-   * Render the history section. Calls renderOne() for rendering
-   * each line item.
+   * Render the history section.
    *
    * param       undefined
    * return      undefined
    * -------------------------------------------------------- */
-  history.render = function () {
+  history.renderSection = function () {
     var sectionData = {}
       , detailData
       , self = this
@@ -62,18 +100,6 @@ define([
     // --------------------------------------------------------
     sectionData.length = SearchHistory.length();
     this.html(this.tplHistory(sectionData));
-
-    // --------------------------------------------------------
-    // Store for renderOne() to use.
-    // --------------------------------------------------------
-    this.$oneEl = $('#history-detail');
-
-    // --------------------------------------------------------
-    // Render the item details.
-    // --------------------------------------------------------
-    _.each(SearchHistory.getList(), function(search) {
-      self.renderOne(search);
-    });
   };
 
   /* --------------------------------------------------------

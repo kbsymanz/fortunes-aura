@@ -76,15 +76,16 @@ define([
     // with latency experience.
     // --------------------------------------------------------
     setTimeout(function() {
-      sandbox.emit('search', options, function(err, result) {
+      sandbox.emit('search', options, function(err, results) {
         var fortune
           , data = {}
           ;
 
         if (err) return sandbox.logger.error(err);
-        data.result = result;
+        data.results = results;
         data.term = options.term;
         data.searchTime = Date.now();
+        data.id = data.searchTime;
         cb(data);
       });
     }, serverDelay);
@@ -203,14 +204,14 @@ define([
    * param       result
    * return      undefined
    * -------------------------------------------------------- */
-  search.renderDetail = function(result) {
+  search.renderDetail = function(results) {
     var sandbox = Utils.getSandbox(sbRef)
       ;
 
     // --------------------------------------------------------
     // Convert newlines into breaks.
     // --------------------------------------------------------
-    result.result = Utils.lf2br(result.result);
+    results.results = Utils.lf2br(results.results);
 
     // --------------------------------------------------------
     // Dynamically starting another component. The search_result
@@ -225,7 +226,7 @@ define([
       name: 'search_result'
       , options: {
         el: '#search_result'
-        , search: result
+        , search: results
       }
     }]);
   };

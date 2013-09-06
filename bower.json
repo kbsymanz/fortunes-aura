@@ -6,6 +6,7 @@
     "aura" : "latest",
     "bootstrap": "3.0.x",
     "require-handlebars-plugin": "latest",
-    "backbone": "1.0.x"
+    "backbone": "1.0.x",
+    "backbone.localStorage": "1.1.6"
   }
 }
